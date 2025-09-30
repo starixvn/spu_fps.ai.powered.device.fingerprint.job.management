@@ -15,12 +15,6 @@ using Fanex.Logging.Sentry;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#if DEBUG
-builder.WebHost.UseUrls("http://*:58848");
-#else
-builder.WebHost.UseUrls("http://*:5000");
-#endif
-
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                      .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                      .AddEnvironmentVariables();
