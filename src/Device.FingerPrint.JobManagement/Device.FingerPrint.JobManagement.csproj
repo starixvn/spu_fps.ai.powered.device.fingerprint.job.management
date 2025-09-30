@@ -15,10 +15,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="ONEbook.UM.AspNetCore" Version="3.1.1.1" />
     <PackageReference Include="ONEbook.UM.Transport" Version="3.1.2" />
+    <PackageReference Include="Quartz" Version="3.15.0" />
     <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.15.0" />
     <PackageReference Include="Refit" Version="8.0.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageReference Include="SilkierQuartz" Version="9.0.396" />
+    <PackageReference Include="SilkierQuartz.Plugins.RecentHistory" Version="9.0.396" />
   </ItemGroup>
 
 	<ItemGroup>

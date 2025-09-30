@@ -46,8 +46,16 @@ builder.Services.AddSilkierQuartz(
         authenticationOptions.UserName = "admin";
         authenticationOptions.Password = "admin";
         authenticationOptions.AccessRequirement = SilkierQuartzAuthenticationOptions.SimpleAccessRequirement.AllowOnlyUsersWithClaim;
+    },
+    options =>
+    {
+        options.Add("quartz.plugin.recentHistory.storeType", "Quartz.Plugins.RecentHistory.Impl.InProcExecutionHistoryStore, Quartz.Plugins.RecentHistory");
+        options.Add("quartz.plugin.recentHistory.type", "Quartz.Plugins.RecentHistory.ExecutionHistoryPlugin, Quartz.Plugins.RecentHistory");
+
     }
 );
+
+builder.Host.ConfigureSilkierQuartzHost();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddOptions();
@@ -74,7 +82,7 @@ var app = builder.Build();
 
 var appSettings = app.Services.GetRequiredService<IAppSettings>();
 
-LogManager.SetDefaultLogCategory("FPS-API")
+LogManager.SetDefaultLogCategory("FPS-Job-Management")
            .Use(
            [
                     new SentryLogging(new SentryEngineOptions
