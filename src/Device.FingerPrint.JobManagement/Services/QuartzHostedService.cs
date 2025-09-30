@@ -74,6 +74,7 @@
                 .UsingJobData("apiUrl", job.APIUrl)
                 .UsingJobData("methodName", job.MethodName)
                 .UsingJobData("controller", job.Controller)
+                .UsingJobData("count", 0)
                 .Build();
         }
 
