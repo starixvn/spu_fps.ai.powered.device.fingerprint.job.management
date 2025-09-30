@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a8d68060-6f81-4a7b-918a-fbaa9ef200cc</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="ONEbook.UM.AspNetCore" Version="3.1.1.1" />
+    <PackageReference Include="ONEbook.UM.Transport" Version="3.1.2" />
+    <PackageReference Include="Quartz" Version="3.15.0" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.15.0" />
+    <PackageReference Include="SilkierQuartz" Version="9.0.396" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<SonarQubeSetting Include="sonar.coverage.exclusions">
+			<Value>**\Program.cs, **/*legacy*, **/*native*, **/*Test*, **/*Model*, **/*Entity*, **/*Criteria*, **/*Command*, **/*Exception*, **/*Test*/**, **/*Model*/**, **/*Entity*/**, **/*Criteria*/**, **/*Command*/**, **/*Exception*/**</Value>
+		</SonarQubeSetting>
+	</ItemGroup>
+
+</Project>
