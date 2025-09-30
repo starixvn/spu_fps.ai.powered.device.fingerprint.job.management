@@ -3,8 +3,6 @@
     using Device.FingerPrint.JobManagement.Models;
     using ONEbook.UM.Services;
     using Quartz;
-    using Sentry;
-    using Sentry.Protocol;
     using System;
     using System.Threading.Tasks;
 
@@ -12,8 +10,8 @@
     public class JobExecute : IJob
     {
         private readonly ILogger _logger;
-        private readonly IJobService jobService;
-        private readonly IScheduler scheduler;
+        private readonly IJobService _jobService;
+        private readonly ISchedulerFactory _schedulerFactory;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IAppSettings _appSettings;
 
@@ -25,14 +23,15 @@
             IAppSettings appSettings)
         {
             _logger = logger;
-            this.jobService = jobService;
-            scheduler = schedulerFactory.GetScheduler().Result;
+            _jobService = jobService;
+            _schedulerFactory = schedulerFactory;
             _maintenanceService = maintenanceService;
             _appSettings = appSettings;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
+            var scheduler = await _schedulerFactory.GetScheduler();
             var isUM = _maintenanceService.GetUnderMaintenanceTime().IsUnderMaintenanceTime;
 
             if (!isUM)
@@ -65,12 +64,12 @@
 
                     var url = JobHelper.GetUrl(apiUrl);
 
-                    var result = await jobService.Execute(jobName, url, methodName, controller, queryString);
+                    var result = await _jobService.Execute(jobName, url, methodName, controller, queryString);
 
                     if (!result)
                     {
                         flagError = true;
-                        messageError = $"{_appSettings.Environment} - {jobName} is failed at {DateTime.Now}.";
+                        messageError = $"{_appSettings.Environment} - {jobName} is failed at {DateTimeOffset.Now}.";
                     }
                     else
                     {

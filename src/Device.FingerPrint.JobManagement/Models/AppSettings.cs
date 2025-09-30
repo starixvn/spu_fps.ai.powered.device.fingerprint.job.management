@@ -1,6 +1,4 @@
-﻿using Refit;
-using Sentry;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Device.FingerPrint.JobManagement.Models
 {

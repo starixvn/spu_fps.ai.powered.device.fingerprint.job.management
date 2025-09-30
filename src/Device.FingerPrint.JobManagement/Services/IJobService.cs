@@ -8,16 +8,16 @@
 
     public interface IJobService
     {
-        Task<bool> Execute(string jobName, string apiUrl, string methodName, string controller, Dictionary<string, object> data);
+        Task<bool> Execute(string jobName, Uri apiUrl, string methodName, string controller, Dictionary<string, object> data);
     }
 
     public class JobService : IJobService
     { 
-        public async Task<bool> Execute(string jobName, string apiUrl, string methodName, string controller, Dictionary<string, object> data)
+        public async Task<bool> Execute(string jobName, Uri apiUrl, string methodName, string controller, Dictionary<string, object> data)
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = new Uri(apiUrl),
+                BaseAddress = apiUrl,
                 Timeout = TimeSpan.FromDays(1)
             };
 

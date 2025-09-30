@@ -15,7 +15,6 @@
     {
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IJobFactory _jobFactory;
-        private readonly IScheduler _scheduler;
 
         public QuartzHostedService(ISchedulerFactory schedulerFactory,
             IJobFactory jobFactory,
@@ -23,7 +22,6 @@
         {
             _schedulerFactory = schedulerFactory;
             _jobFactory = jobFactory;
-            _scheduler = _schedulerFactory.GetScheduler().Result;
             JobSchedulers = _appSettings.Schedulers;
         }
 
@@ -31,9 +29,10 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            var scheduler = await _schedulerFactory.GetScheduler(cancellationToken);
             if (JobSchedulers.GroupJobs != null && JobSchedulers.GroupJobs.Any())
             {
-                _scheduler.JobFactory = _jobFactory;
+                scheduler.JobFactory = _jobFactory;
 
                 var groupJobs = JobSchedulers.GroupJobs;
 
@@ -47,22 +46,22 @@
                         {
                             var triggerDetail = BuildTrigger(trigger, groupJob.Name);
 
-                            _scheduler.ScheduleJob(jobDetail, triggerDetail, cancellationToken);
+                            scheduler.ScheduleJob(jobDetail, triggerDetail, cancellationToken);
 
                             if (!job.Active)
                             {
-                                _scheduler.PauseTrigger(new TriggerKey(trigger.TriggerName, groupJob.Name));
+                                scheduler.PauseTrigger(new TriggerKey(trigger.TriggerName, groupJob.Name));
                             }
                         });
                     });
 
                     if (IsPauseTrigger(groupJob.Jobs))
                     {
-                        await _scheduler.PauseTriggers(GroupMatcher<TriggerKey>.GroupEquals(groupJob.Name));
+                        await scheduler.PauseTriggers(GroupMatcher<TriggerKey>.GroupEquals(groupJob.Name));
                     }
                 }
 
-                await _scheduler.Start(cancellationToken);
+                await scheduler.Start(cancellationToken);
             }
         }
 

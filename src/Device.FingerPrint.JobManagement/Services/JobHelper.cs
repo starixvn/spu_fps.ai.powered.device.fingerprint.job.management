@@ -1,7 +1,6 @@
 ﻿namespace Device.FingerPrint.JobManagement.Services
 {
     using Quartz;
-    using Sentry;
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -9,16 +8,16 @@
 
     public static class JobHelper
     {
-        public static string GetUrl(string apiUrl)
+        public static Uri? GetUrl(string apiUrl)
         {
             if (!string.IsNullOrWhiteSpace(apiUrl))
             {
                 var uri = new Uri(apiUrl);
 
-                return string.IsNullOrWhiteSpace(uri.Query) ? apiUrl : uri.AbsoluteUri.Replace(uri.Query, string.Empty);
+                return string.IsNullOrWhiteSpace(uri.Query) ? uri : new Uri(uri.AbsoluteUri.Replace(uri.Query, string.Empty));
             }
 
-            return string.Empty;
+            return null;
         }
 
         public static Dictionary<string, object> GetQueryData(string apiUrl)
@@ -27,7 +26,10 @@
             {
                 var uri = new Uri(apiUrl);
 
-                if (string.IsNullOrWhiteSpace(uri.Query)) return new Dictionary<string, object>();
+                if (string.IsNullOrWhiteSpace(uri.Query))
+                {
+                    return new Dictionary<string, object>();
+                }
 
                 var parameters = HttpUtility.ParseQueryString(uri.Query);
                 var result = new Dictionary<string, object>();
