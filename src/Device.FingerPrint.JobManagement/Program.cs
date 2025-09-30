@@ -1,3 +1,5 @@
+using Device.FingerPrint.JobManagement.Models;
+using Device.FingerPrint.JobManagement.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using ONEbook.UM.AspNetCore;
@@ -7,6 +9,7 @@ using ONEbook.UM.Services;
 using ONEbook.UM.Transport;
 using Quartz;
 using SilkierQuartz;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +30,7 @@ builder.Services.AddSilkierQuartz(
         options.UseLocalTime = true;
         options.DefaultDateFormat = "yyyy-MM-dd";
         options.DefaultTimeFormat = "HH:mm:ss.fff";
-        options.CronExpressionOptions = new CronExpressionDescriptor.Options()
+        options.CronExpressionOptions = new CronExpressionDescriptor.Options
         {
             DayOfWeekStartIndexZero = false //Quartz uses 1-7 as the range
         };
@@ -47,12 +50,20 @@ builder.Services.AddSilkierQuartz(
 builder.Services.AddHealthChecks();
 builder.Services.AddOptions();
 
+builder.Services.AddSingleton<IAppSettings, AppSettings>();
 builder.Services.AddSingleton(new UMClientConfiguration().Initialize(builder.Configuration));
 builder.Services.AddSingleton<IUMCacheService, UMCacheService>();
 builder.Services.AddSingleton<IUMRestClient, UMRestClient>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IHttpContextHelper, HttpContextHelper>();
 builder.Services.AddSingleton<IMaintenanceService, MaintenanceService>();
+
+builder.Services.AddRefitClient<IJobServiceApi>();
+builder.Services.AddSingleton<IJobService, JobService>();
+builder.Services.AddSingleton<QuartzHostedService>();
+builder.Services.AddHostedService<QuartzHostedService>();
+builder.Services.AddSingleton<JobExecute>();
+builder.Services.AddSingleton<JobMonitoring>();
 
 builder.Services.AddControllers();
 
@@ -68,7 +79,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHealthChecks("/healthz", new HealthCheckOptions()
+app.UseHealthChecks("/healthz", new HealthCheckOptions
 {
     Predicate = _ => true
 });
