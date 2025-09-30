@@ -11,20 +11,21 @@
     [DisallowConcurrentExecution, PersistJobDataAfterExecution]
     public class JobExecute : IJob
     {
+        private readonly ILogger _logger;
         private readonly IJobService jobService;
-        private readonly ISentryClient sentryClient;
         private readonly IScheduler scheduler;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IAppSettings _appSettings;
 
-        public JobExecute(IJobService jobService
-            , ISentryClient sentryClient
-            , ISchedulerFactory schedulerFactory
-            , IMaintenanceService maintenanceService
-            , IAppSettings appSettings)
+        public JobExecute(
+            ILogger logger,
+            IJobService jobService,
+            ISchedulerFactory schedulerFactory,
+            IMaintenanceService maintenanceService,
+            IAppSettings appSettings)
         {
+            _logger = logger;
             this.jobService = jobService;
-            this.sentryClient = sentryClient;
             scheduler = schedulerFactory.GetScheduler().Result;
             _maintenanceService = maintenanceService;
             _appSettings = appSettings;
@@ -54,8 +55,7 @@
 
                     dataMap.PutAsString("count", 0);
 
-                    sentryClient.CaptureMessage($"{_appSettings.Environment} - {jobName} is STOPPED. Cause of RETRIED EXECEEDED.", SentryLevel.Error);
-
+                    await _logger.ErrorAsync($"{_appSettings.Environment} - {jobName} is STOPPED. Cause of RETRIED EXECEEDED.");
                     throw e;
                 }
 
@@ -87,7 +87,7 @@
                 {
                     count++;
                     dataMap.PutAsString("count", count);
-                    throw JobHelper.JobExecuteFailed(messageError, sentryClient);
+                    throw JobHelper.JobExecuteFailed(messageError, _logger);
                 }
             }
         }

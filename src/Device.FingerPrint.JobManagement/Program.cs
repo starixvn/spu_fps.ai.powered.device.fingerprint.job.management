@@ -10,6 +10,8 @@ using ONEbook.UM.Transport;
 using Quartz;
 using SilkierQuartz;
 using Refit;
+using Fanex.Logging;
+using Fanex.Logging.Sentry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,7 @@ builder.Services.AddSilkierQuartz(
 builder.Services.AddHealthChecks();
 builder.Services.AddOptions();
 
+builder.Services.AddSingleton<ILogger, Logger>();
 builder.Services.AddSingleton<IAppSettings, AppSettings>();
 builder.Services.AddSingleton(new UMClientConfiguration().Initialize(builder.Configuration));
 builder.Services.AddSingleton<IUMCacheService, UMCacheService>();
@@ -68,6 +71,17 @@ builder.Services.AddSingleton<JobMonitoring>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+var appSettings = app.Services.GetRequiredService<IAppSettings>();
+
+LogManager.SetDefaultLogCategory("FPS-API")
+           .Use(
+           [
+                    new SentryLogging(new SentryEngineOptions
+                    {
+                        Dsn = appSettings.SentryDsn
+                    })
+           ]);
 
 if (app.Environment.IsDevelopment())
 {

@@ -43,11 +43,11 @@
             return new Dictionary<string, object>();
         }
 
-        public static JobExecutionException JobExecuteFailed(string errorMessage, ISentryClient sentryClient)
+        public static JobExecutionException JobExecuteFailed(string errorMessage, ILogger logger)
         {
             var jobExecutionException = new JobExecutionException(errorMessage);
 
-            sentryClient.CaptureMessage(errorMessage, SentryLevel.Error);
+            logger.Error(errorMessage);
 
             Thread.Sleep(60000);
 

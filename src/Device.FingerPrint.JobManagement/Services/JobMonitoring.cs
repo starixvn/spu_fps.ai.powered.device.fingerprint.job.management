@@ -5,7 +5,6 @@
     using ONEbook.UM.Services;
     using Quartz;
     using Quartz.Impl.Matchers;
-    using Sentry;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,17 +13,17 @@
     [DisallowConcurrentExecution, PersistJobDataAfterExecution]
     public class JobMonitoring : IJob
     {
+        private readonly ILogger _logger;
         private readonly IScheduler _scheduler;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IAppSettings _appSettings;
-        private readonly ISentryClient _sentryClient;
 
-        public JobMonitoring(IAppSettings appSettings, ISchedulerFactory schedulerFactory, IMaintenanceService maintenanceService, ISentryClient sentryClient)
+        public JobMonitoring(ILogger logger, IAppSettings appSettings, ISchedulerFactory schedulerFactory, IMaintenanceService maintenanceService)
         {
+            _logger = logger;
             _scheduler = schedulerFactory.GetScheduler().Result;
             _maintenanceService = maintenanceService;
             _appSettings = appSettings;
-            _sentryClient = sentryClient;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -65,7 +64,7 @@
             }
             catch (Exception ex)
             {
-                _sentryClient.CaptureException(ex);
+                await _logger.ErrorAsync("Job Monitoring Execute error", ex);
             }
         }
 
