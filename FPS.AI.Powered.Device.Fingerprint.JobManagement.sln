@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device.FingerPrint.JobManagement", "src\Device.FingerPrint.JobManagement\Device.FingerPrint.JobManagement.csproj", "{9DD64E95-EC00-7814-1725-FA8EF9206C63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device.FingerPrint.JobManagement.Tests", "src\Device.FingerPrint.JobManagement.Tests\Device.FingerPrint.JobManagement.Tests.csproj", "{98097DBE-2F3E-4399-9F2C-E5DAF2A832D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DD64E95-EC00-7814-1725-FA8EF9206C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DD64E95-EC00-7814-1725-FA8EF9206C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DD64E95-EC00-7814-1725-FA8EF9206C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DD64E95-EC00-7814-1725-FA8EF9206C63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98097DBE-2F3E-4399-9F2C-E5DAF2A832D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98097DBE-2F3E-4399-9F2C-E5DAF2A832D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98097DBE-2F3E-4399-9F2C-E5DAF2A832D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98097DBE-2F3E-4399-9F2C-E5DAF2A832D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E381371-1F66-4A4E-B4DA-0B07D246B6BF}
+	EndGlobalSection
+EndGlobal
